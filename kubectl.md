@@ -1,3 +1,9 @@
+### Get All Clusters
+
+```sh
+kubectl get all
+```
+
 ### Get Nodes
 
 ```sh
