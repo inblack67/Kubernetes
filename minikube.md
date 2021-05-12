@@ -46,3 +46,9 @@ kubectl version
 ```sh
 minikube delete
 ```
+
+### External IP to service
+
+```sh
+minikube service mongo-express-service
+```
