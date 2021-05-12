@@ -114,3 +114,9 @@ kubectl delete -f mynginx-deployment.yaml
 
 - Deloyment will be deleted
 - Same goes for service
+
+### Get Secret
+
+```sh
+kubectl get secret
+```
