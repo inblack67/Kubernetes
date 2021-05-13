@@ -36,7 +36,7 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: db
-            - name: DB_URL
+            - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: postgres-configmap
