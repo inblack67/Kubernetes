@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  redis:
+    image: redis
+    networks:
+      - webnet
+  db:
+    image: postgres
+    ports:
+      - '3030:5432'
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - webnet
+    env_file:
+      - .env
+  web:
+    image: inblack67/heathens:latest
+    ports:
+      - '5000:5000'
+    networks:
+      - webnet
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+    env_file: .env
+networks:
+  webnet:
