@@ -38,6 +38,51 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: db
+            - name: SESSION_SECRET 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: SESSION_SECRET
+            - name: CLIENT_URL 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: CLIENT_URL
+            - name: NODE_ENV 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: NODE_ENV
+            - name: RECAPTCHA_SECRET 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: RECAPTCHA_SECRET
+            - name: CRYPTO_KEY 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: CRYPTO_KEY
+            - name: QUERY_LIMIT 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: QUERY_LIMIT
+            - name: EMAIL 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: EMAIL
+            - name: PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: PASSWORD
+            - name: COOKIE_DOMAIN 
+              valueFrom:
+                secretKeyRef:
+                  name: heathens-secret
+                  key: COOKIE_DOMAIN
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -53,9 +98,6 @@ spec:
                 configMapKeyRef:
                   name: redis-configmap
                   key: REDIS_PORT
-            - name: NODE_ENV
-              value: development
----
 apiVersion: v1
 kind: Service
 metadata:
