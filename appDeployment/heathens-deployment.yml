@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heathens-deployment
+  labels:
+    apps: heathens-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: heathens-deployment
+  # pod definition:-
+  template:
+    metadata:
+      labels:
+        app: heathens-deployment
+    spec:
+      containers:
+        - name: heathens-deployment
+          image: inblack67/heathens:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: db
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-configmap
+                  key: database_url
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-configmap
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-configmap
+                  key: REDIS_PORT
+---
+# mongo-express external service => which we will access through browser
+apiVersion: v1
+kind: Service
+metadata:
+  name: heathens-service
+spec:
+  selector:
+    app: heathens-deployment
+  type: LoadBalancer # external service => accepts external requests
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30001 # access through browser => range => 30000 to 32767

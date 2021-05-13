@@ -5,7 +5,7 @@ import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
-import dotenv from 'dotenv-safe';
+import dotenv from 'dotenv';
 import 'colors';
 import { createConnection } from "typeorm";
 import { UserEntity } from './entities/User';
@@ -25,42 +25,56 @@ import { populateRedis } from './utils/populate';
 
 const main = async () => {
 
-    const PORT = process.env.PORT || 5000;
+    console.log('my envs = ', process.env);
+
+    const PORT = +process.env.PORT!;
 
     dotenv.config();
 
     const RedisClient = new Redis({
-        host: process.env.REDIS_HOST,
-        port: 6379
+        host: process.env.REDIS_HOST!,
+        port: +process.env.REDIS_PORT! 
     });
 
     await RedisClient.flushall();
 
     const RedisStore = connectRedis(session);
 
-    let retries = 20;
-    while (retries) {
-        try {
-            await createConnection({
-                type: 'postgres',
-                // url: process.env.DB_URL,
-                database: process.env.POSTGRES_DB,
-                username: process.env.POSTGRES_USER,
-                password: process.env.POSTGRES_PASSWORD,
-                // logging: true,
-                synchronize: true,
-                host: process.env.DB_HOST,
-                entities: [ UserEntity, ChannelEntity, MessageEntity ]
-            });
-            console.log('Postgres is here'.blue.bold);
-            break;
-        } catch (err) {
-            console.log('inside typeorm...');
-            console.error(err);
-            retries -= 1;
-            console.log('retries left = ', retries);
-            await new Promise(res => setTimeout(res, 5000));
-        }
+    // let retries = 20;
+    // // while (retries) {
+    // //     try {
+    // //         await createConnection({
+    // //             type: 'postgres',
+    // //             url: process.env.DB_URL,
+    // //             // logging: true,
+    // //             synchronize: true,
+    // //             entities: [ UserEntity, ChannelEntity, MessageEntity ]
+    // //         });
+    // //         console.log('Postgres is here'.blue.bold);
+    // //         break;
+    // //     } catch (err) {
+    // //         console.log('inside typeorm...');
+    // //         console.error(err);
+    // //         retries -= 1;
+    // //         console.log('retries left = ', retries);
+    // //         await new Promise(res => setTimeout(res, 5000));
+    // //     }
+    // // }
+
+    try {
+        await createConnection({
+            type: 'postgres',
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            url: process.env.DB_URL,
+            database: process.env.DB,
+            // logging: true,
+            synchronize: true,
+            entities: [ UserEntity, ChannelEntity, MessageEntity ]
+        });
+        console.log('Postgres is here'.blue.bold);
+    } catch (err) {
+        console.error(`Error connecting to postgres = `, err);
     }
 
     const app = express();
@@ -91,7 +105,7 @@ const main = async () => {
         proxy: isProd(),
         store: new RedisStore({ client: RedisClient }),
         name: 'ts',
-        secret: process.env.SESSION_SECRET,
+        secret: process.env.SESSION_SECRET!,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -143,7 +157,7 @@ const main = async () => {
                                 simpleEstimator({ defaultComplexity: 1 }),
                             ],
                         });
-                        if (complexity >= +process.env.QUERY_LIMIT) {
+                        if (complexity >= +process.env.QUERY_LIMIT!) {
                             console.log(`FATAL Query Complexity = ${ complexity }`.red.bold);
                             throw new ErrorResponse('Too Complex', 401);
                         }

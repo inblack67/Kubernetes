@@ -9,51 +9,25 @@ services:
     depends_on:
       - web1
       - web2
-  redis:
-    image: redis
-  db:
-    image: postgres
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    env_file:
-      - .env
+      - web3
+      - web4
   web1:
     image: inblack67/heathens:latest
-    depends_on:
-      - db
-      - redis
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
       PORT: 5001
     env_file: .env
   web2:
     image: inblack67/heathens:latest
-    depends_on:
-      - db
-      - redis
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
       PORT: 5002
     env_file: .env
   web3:
     image: inblack67/heathens:latest
-    depends_on:
-      - db
-      - redis
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
       PORT: 5003
     env_file: .env
   web4:
     image: inblack67/heathens:latest
-    depends_on:
-      - db
-      - redis
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
       PORT: 5004
     env_file: .env
