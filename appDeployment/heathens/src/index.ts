@@ -37,29 +37,9 @@ const main = async () => {
     });
 
     await RedisClient.flushall();
+    console.log(`Redis is here`.blue.bold);
 
     const RedisStore = connectRedis(session);
-
-    // let retries = 20;
-    // // while (retries) {
-    // //     try {
-    // //         await createConnection({
-    // //             type: 'postgres',
-    // //             url: process.env.DB_URL,
-    // //             // logging: true,
-    // //             synchronize: true,
-    // //             entities: [ UserEntity, ChannelEntity, MessageEntity ]
-    // //         });
-    // //         console.log('Postgres is here'.blue.bold);
-    // //         break;
-    // //     } catch (err) {
-    // //         console.log('inside typeorm...');
-    // //         console.error(err);
-    // //         retries -= 1;
-    // //         console.log('retries left = ', retries);
-    // //         await new Promise(res => setTimeout(res, 5000));
-    // //     }
-    // // }
 
     try {
         await createConnection({

@@ -19,8 +19,10 @@ spec:
         - name: heathens-deployment
           image: inblack67/heathens:latest
           ports:
-            - containerPort: 80
+            - containerPort: 5000
           env:
+            - name: PORT
+              value: '5000'
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -52,7 +54,6 @@ spec:
                   name: redis-configmap
                   key: REDIS_PORT
 ---
-# mongo-express external service => which we will access through browser
 apiVersion: v1
 kind: Service
 metadata:
@@ -63,6 +64,6 @@ spec:
   type: LoadBalancer # external service => accepts external requests
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
+      port: 5000
+      targetPort: 5000
       nodePort: 30001 # access through browser => range => 30000 to 32767

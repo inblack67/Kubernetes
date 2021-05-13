@@ -29,6 +29,8 @@ kubectl create deployment mynginx-deployment --image=nginx
 ```sh
 kubectl get deployment
 kubectl get pod
+kubectl get pod --watch
+kubectl get service
 ```
 
 - Deployment will be ready when Pod is created
