@@ -145,10 +145,13 @@ export class AuthResolver {
         @Arg('password')
         password: string,
         @Ctx()
-        { session, redis }: MyContext,
+        ctx: MyContext,
         @Arg('recaptchaToken', { nullable: true })
         recaptchaToken?: string,
     ): Promise<UserEntity> {
+
+        const { session, redis } = ctx;
+
         await recaptchaTest(recaptchaToken);
 
         if (session.user) {
@@ -175,12 +178,19 @@ export class AuthResolver {
             const subject = 'Verify Email';
             const token = v4();
             await redis.set(`${ RED_VERIFY_EMAIL_TOKEN }:${ token }`, user.email, 'ex', 1000 * 60 * 60); // one hour
-            const url = `${ process.env.CLIENT_URL }/verify-email/${ token }`;
-            const res = await sendMail({ to, subject, templatePath, text, username, url });
-            if (!res) {
-                throw new ErrorResponse('Error Sending The Mail', 500);
+            if(process.env.NODE_ENV === 'production'){
+                const url = `${ process.env.CLIENT_URL }/verify-email/${ token }`;
+                const res = await sendMail({ to, subject, templatePath, text, username, url });
+                if (!res) {
+                    throw new ErrorResponse('Error Sending The Mail', 500);
+                }
+                throw new ErrorResponse('Verify Your Mail', 401);
+            }else{
+                const isDone = await this.verifyEmail(token, ctx);
+                if(!isDone){
+                    throw new ErrorResponse('Error verifying your mail', 401);
+                }
             }
-            throw new ErrorResponse('Verify Your Mail', 401);
         }
 
         session.user = user;
