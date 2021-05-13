@@ -24,6 +24,9 @@ import { fieldExtensionsEstimator, getComplexity, simpleEstimator } from 'graphq
 import { populateRedis } from './utils/populate';
 
 const main = async () => {
+
+    const PORT = process.env.PORT || 5000;
+
     dotenv.config();
 
     const RedisClient = new Redis({
@@ -44,7 +47,7 @@ const main = async () => {
                 database: process.env.POSTGRES_DB,
                 username: process.env.POSTGRES_USER,
                 password: process.env.POSTGRES_PASSWORD,
-                logging: true,
+                // logging: true,
                 synchronize: true,
                 host: process.env.DB_HOST,
                 entities: [ UserEntity, ChannelEntity, MessageEntity ]
@@ -78,7 +81,7 @@ const main = async () => {
     }));
 
     app.get('/', (_: Request, res: Response) => {
-        res.send('API up and runnin');
+        res.send(`API up and runnin at port ${PORT}`);
         res.end();
     });
 
@@ -153,8 +156,6 @@ const main = async () => {
 
     apolloServer.installSubscriptionHandlers(ws);
     apolloServer.applyMiddleware({ app, cors: false });
-
-    const PORT = +process.env.PORT || 5000;
 
     ws.listen(PORT, async () => {
         console.log(`Server started on port ${ PORT }`.green.bold);
