@@ -36,6 +36,12 @@ kubectl get service
 - Deployment will be ready when Pod is created
 - Check status of Pod creation via get pod
 
+### Restart Deployment
+
+```sh
+kubectl rollout restart deployment my-deployment
+```
+
 ### Get Replicaset
 
 ```sh
