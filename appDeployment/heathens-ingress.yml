@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: heathens-ingress
+  namespace: default # same namespace as our app services
+spec:
+  rules:
+  - host: heathens.tk
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: heathens-service
+              port:
+                number: 5000

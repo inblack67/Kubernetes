@@ -38,47 +38,47 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: db
-            - name: SESSION_SECRET 
+            - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: SESSION_SECRET
-            - name: CLIENT_URL 
+            - name: CLIENT_URL
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: CLIENT_URL
-            - name: NODE_ENV 
+            - name: NODE_ENV
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: NODE_ENV
-            - name: RECAPTCHA_SECRET 
+            - name: RECAPTCHA_SECRET
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: RECAPTCHA_SECRET
-            - name: CRYPTO_KEY 
+            - name: CRYPTO_KEY
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: CRYPTO_KEY
-            - name: QUERY_LIMIT 
+            - name: QUERY_LIMIT
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: QUERY_LIMIT
-            - name: EMAIL 
+            - name: EMAIL
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: EMAIL
-            - name: PASSWORD 
+            - name: PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
                   key: PASSWORD
-            - name: COOKIE_DOMAIN 
+            - name: COOKIE_DOMAIN
               valueFrom:
                 secretKeyRef:
                   name: heathens-secret
@@ -106,9 +106,9 @@ metadata:
 spec:
   selector:
     app: heathens-deployment
-  type: LoadBalancer # external service => accepts external requests
+  # type: LoadBalancer # external service => accepts external requests
   ports:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-      nodePort: 30001 # access through browser => range => 30000 to 32767
+      # nodePort: 30001 # access through browser => range => 30000 to 32767
