@@ -98,6 +98,7 @@ spec:
                 configMapKeyRef:
                   name: redis-configmap
                   key: REDIS_PORT
+---
 apiVersion: v1
 kind: Service
 metadata:
