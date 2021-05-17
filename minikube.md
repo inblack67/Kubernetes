@@ -52,3 +52,9 @@ minikube delete
 ```sh
 minikube service mongo-express-service
 ```
+
+### IP
+
+```sh
+minikube ip
+```
