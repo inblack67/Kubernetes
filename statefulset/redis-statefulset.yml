@@ -1,43 +1,38 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis-statefulset
+  name: redis-cluster
 spec:
-  serviceName: redis-statefulset
+  serviceName: redis-cluster
+  replicas: 6
   selector:
     matchLabels:
-      app: redis-statefulset
-  replicas: 3
+      app: redis-cluster
   template:
     metadata:
       labels:
-        app: redis-statefulset
+        app: redis-cluster
     spec:
       containers:
-        - name: redis-statefulset
+        - name: redis-cluster
           image: redis
-          imagePullPolicy: 'IfNotPresent'
           ports:
             - containerPort: 6379
-          envFrom:
-            - configMapRef:
-                name: redis-configmap
           volumeMounts:
             - name: redis-data
-              mountPath: /data/redis
+              mountPath: /conf
+              readOnly: false
       volumes:
         - name: redis-pv-volume
-          persistentVolumeClaim:
-            claimName: redis-claim
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-service
-spec:
-  selector:
-    app: redis-statefulset # to connect to pod through label
-  ports:
-    - protocol: TCP
-      port: 6379 # expose service port
-      targetPort: 6379 # pod/container port
+          configMap:
+            name: redis-cluster
+            defaultMode: 0755
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-claim
+      spec:
+        accessModes: ['ReadWriteOnce']
+        storageClassName: 'standard'
+        resources:
+          requests:
+            storage: 5Mi

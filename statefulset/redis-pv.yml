@@ -11,16 +11,4 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: '/redis-data' # redis storage path
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: redis-claim
-spec:
-  storageClassName: standard
-  accessModes:
-    - ReadWriteOnce
-  resources: 
-    requests:
-      storage: 10Mi
+    path: '/mnt/redis-data' # redis storage path
