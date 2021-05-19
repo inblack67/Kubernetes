@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  web:
+    image: inblack67/redis-app:latest
+    ports:
+      - '5000:5000'

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app-deployment
+  labels:
+    apps: redis-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-app-deployment
+  # pod definition:-
+  template:
+    metadata:
+      labels:
+        app: redis-app-deployment
+    spec:
+      containers:
+        - name: redis-app-deployment
+          image: inblack67/redis-app:latest
+          imagePullPolicy: 'IfNotPresent'
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-app-service
+spec:
+  selector:
+    app: redis-app-deployment
+  type: LoadBalancer
+  # type: LoadBalancer # external service => accepts external requests
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      nodePort: 30001 # access through browser => range => 30000 to 32767

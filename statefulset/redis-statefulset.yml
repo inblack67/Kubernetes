@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-statefulset
+spec:
+  serviceName: redis-statefulset
+  selector:
+    matchLabels:
+      app: redis-statefulset
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: redis-statefulset
+    spec:
+      containers:
+        - name: redis-statefulset
+          image: redis
+          imagePullPolicy: 'IfNotPresent'
+          ports:
+            - containerPort: 6379
+          envFrom:
+            - configMapRef:
+                name: redis-configmap
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data/redis
+      volumes:
+        - name: redis-pv-volume
+          persistentVolumeClaim:
+            claimName: redis-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis-statefulset # to connect to pod through label
+  ports:
+    - protocol: TCP
+      port: 6379 # expose service port
+      targetPort: 6379 # pod/container port
